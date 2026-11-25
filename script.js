@@ -13,44 +13,64 @@ form.addEventListener("submit", validateForm)
 // Functions 
 function validateForm(e) {
 
+    // Prevent the form submission automatically
+    e.preventDefault();
+
+    // Delete old errors 
+    // Select them all 
+    const oldErrors = document.querySelectorAll(".error-message");
+    for (let i = 0; i <oldErrors.length; i++ ) {
+
+        // Reset the border by targeting the the input associated with each error right before removing it
+        oldErrors[i].previousElementSibling.style.border = ""; 
+        
+        // Remove the error
+        oldErrors[i].remove();
+    }
+
     // Track whether form is valid
     let formIsValid = true;
 
     // Email Regex (check if the email is legit)
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    // Prevent the form submission automatically
-    e.preventDefault();
 
     // Check if any of the field is empty
     if (nameInput.value.trim() === "") {
         showError(nameInput, "Please, enter your name!");
-
-        // Track whether the form is valid
         formIsValid = false;     
     }
 
     if (emailInput.value.trim() === "") {
         showError(emailInput, "Please, enter your email!");
-
         formIsValid = false;
+    
+        // Check if the email is verified with the regex 
+    } else if (!emailPattern.test(emailInput.value)) {
+        showError(emailInput, "Please enter a valid email address!");
     }
 
     if (passwordInput.value.trim() === "") {
         showError(passwordInput, "Please, enter your password!");
-
         formIsValid = false;
+
+        // Check if the password is less than 8 characters
+    } else if (passwordInput.value.length < 8) {
+        showError(passwordInput, "The password must be more than 8 characters!")
     }
 
     if (confirmPassword.value.trim() === "") {
         showError(confirmPassword, "Please, confirm your password!");
-
         formIsValid = false;
+
+    } else if (confirmPassword.value.trim() !== passwordInput.value.trim()) {
+        showError(confirmPassword, "Password doesn't match!");
     }
 
     // Check if everything is valid
     if (formIsValid === true) {
-        
+        alert("Account created successfully!");
+        form.reset();        
     }
 }
 
